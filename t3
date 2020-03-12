@@ -1,0 +1,27 @@
+main()
+
+def main()
+   return 0
+end
+
+def f( x )
+   return 0
+end
+
+def g( x, y)
+   return 0
+
+for a = 1 to 3
+    print(a)
+    nl()
+end
+
+for b = 6 to 15
+    print(b)
+    nl()
+end
+
+for yur = 18 to 54
+    print(yur)
+    nl()
+end

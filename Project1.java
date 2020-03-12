@@ -1,7 +1,7 @@
-/*
+    /*
     Original code written by Dr. Jerry Shultz
     Additional code written by Raymond Ortiz
-*/
+    */
 import java.io.*;
 import java.util.*;
 //import java.util.logging.Logger;
@@ -15,11 +15,11 @@ public class Project1
   static int[] mem;
   static int ip, bp, sp, rv, hp, numPassed, gp;
   static int step;
-  static int stackCount = 0;                                    // Used to determine which cell in the heap to access when instructions 24/25 are called.
+  static int stackCount = 0;                                                    // Used to determine which cell in the heap to access when instructions 24/25 are called.
 
   static String fileName;
 
-  static boolean replacedLabels = false;              // Used to keep track of which cell to push onto when instruction 3 is called.
+  static boolean replacedLabels = false;                           // Used to keep track of which cell to push onto when instruction 3 is called.
 
   static int heapIndex = hp;
 
@@ -122,7 +122,7 @@ public class Project1
     bp = k;  sp = k+2;  ip = 0;  rv = -1;  hp = max;
     numPassed = 0;
 
-    int bpOffset = bp + 2;                                      // To store the real bp (accounting for return ip and return bp)
+    int bpOffset = bp + 2;                                         // To store the real bp (accounting for return ip and return bp)
 
     int codeEnd = bp-1;
 
@@ -161,7 +161,7 @@ public class Project1
       op = mem[ip];
       ip++;
 
-      a = -1;  b = -2;  c = -3;                                     // extract the args into a, b, c
+      a = -1;  b = -2;  c = -3;                                    // extract the args into a, b, c
 
 
       if(op == callCode || op == jumpCode ||
@@ -195,111 +195,111 @@ public class Project1
 
       switch(op) {
 
-        case noopCode: // 0
+        case noopCode:                                       // 0
             //  Do nothing
             break;
 
-        case labelCode: // 1
+        case labelCode:                                       // 1
             /*
-                During program loading this instruction disappears, and all occurences of L
-                are replaced by the actual index in mem where the opcode 1 would have
-                been stored.
+            During program loading this instruction disappears, and all occurences of L
+            are replaced by the actual index in mem where the opcode 1 would have
+            been stored.
             */
             System.out.println("1, This code should never be reached - error.");
             System.exit(1);
             break;
 
-        case callCode: // 2
+        case callCode:                                          // 2
             /*
-                Do all thee steps necessary to set up for execution of the subprogram that
-                begins at L.
+            Do all thee steps necessary to set up for execution of the subprogram that
+            begins at L.
             */
             int returnBp = bp;
             int returnIp = ip;
 
             ip = a;
-            bp = sp;                                              // Move onto a new stack frame
+            bp = sp;                                                  // Move onto a new stack frame
             bpOffset = bp + 2;
-            sp += stackPushCounter+2;
-            stackPushCounter = 0;                    // Reset stackPushCounter
+            sp += stackCount+2;
+            stackCount = 0;
             mem[bp] = returnIp;                         //set return bp
-            mem[bp+1] = returnBp;                   //set return ip
+            mem[bp + 1] = returnBp;                  //set return ip
             break;
 
-        case passCode: // 3
+        case passCode:                                       // 3
             //  Push the contents of cell a on the stack.
-            mem[sp+2 + stackPushCounter] = mem[bpOffset + a];
-            stackPushCounter++;
+            mem[sp + 2 + stackCount] = mem[bpOffset + a];
+            stackCount++;
             break;
 
-        case allocCode: // 4
+        case allocCode:                                        // 4
             //  Increase sp by n to make space for local variables in the current stack frame.
             sp += a;
             break;
 
-        case returnCode: // 5
+        case returnCode:                                      // 5
             /*
-                Do all the steps necessary to return from the current subprogram, including
-                putting the value stored in cell a in rv.
+            Do all the steps necessary to return from the current subprogram, including
+            putting the value stored in cell a in rv.
             */
             rv = mem[bpOffset + a];
             sp = bp;
-            stackPushCounter = 0;                      // Reset stackPushCounter
+            stackCount = 0;
             ip = mem[bp];
-            bp = mem[bp+1];
+            bp = mem[bp + 1];
             bpOffset = bp + 2;
             break;
 
-        case getRetvalCode: // 6
+        case getRetvalCode:                                // 6
             //  Copy the value stored in rv into cell a.
             mem[bpOffset + a] = rv;
             break;
 
-          case jumpCode: // 7
+          case jumpCode:                                       // 7
               /*
-                Change ip to L.
-               The argument a has already been changed to be the instruction number
-               we're supposed to jump to.
+             Change ip to L.
+             The argument a has already been changed to be the instruction number
+              we're supposed to jump to.
              */
               ip = a;
               break;
 
-          case condJumpCode: // 8
+          case condJumpCode:                            // 8
               /*
-                If the value stored in cell a is non-zero, change ip to L, otherwise
-               move ip to the next instruction.
+              If the value stored in cell a is non-zero, change ip to L, otherwise
+              move ip to the next instruction.
              */
               if(mem[bpOffset + b] != 0) {
                   ip = a;
               }
               break;
 
-        case addCode: // 9
+        case addCode:                                             // 9
             //  Add the values in cell b and cell c and store the result in cell a.
             mem[bpOffset + a] = mem[bpOffset + b] + mem[bpOffset + c];
             break;
 
-        case subCode: // 10
+        case subCode:                                             // 10
             //  Same as 9, but do cell b - cell c.
             mem[bpOffset + a] = mem[bpOffset + b] - mem[bpOffset + c];
             break;
 
-        case multCode: // 11
+        case multCode:                                           // 11
             //  Same as 9, but do cell b * cell c.
             mem[bpOffset + a] = mem[bpOffset + b] * mem[bpOffset + c];
             break;
 
-        case divCode: // 12
+        case divCode:                                               // 12
             //  Same as 9, but do cell b / cell c.
             mem[bpOffset + a] = mem[bpOffset + b] / mem[bpOffset + c];
             break;
 
-        case remCode: // 13
+        case remCode:                                             // 13
             //  Same as 9, but do cell b % cell c.
             mem[bpOffset + a] = mem[bpOffset + b] % mem[bpOffset + c];
             break;
 
-        case equalCode: // 14
+        case equalCode:                                          // 14
             //  Same as 9, but do cell b == cell c.
             if (mem[bpOffset + b] == mem[bpOffset + c]) {
                 mem[bpOffset + a] = 1;
@@ -308,7 +308,7 @@ public class Project1
                 mem[bpOffset + a] = 0;
             break;
 
-        case notEqualCode: // 15
+        case notEqualCode:                                  // 15
             //  Same as 9, but do cell b != cell c.
             if (mem[bpOffset + b] != mem[bpOffset + c]) {
                 mem[bpOffset + a] = 1;
@@ -317,7 +317,7 @@ public class Project1
                 mem[bpOffset + a] = 0;
             break;
 
-        case lessCode: // 16
+        case lessCode:                                             // 16
             //  Same as 9, but do cell b < cell c.
             if (mem[bpOffset + b] < mem[bpOffset + c]) {
                 mem[bpOffset + a] = 1;
@@ -326,7 +326,7 @@ public class Project1
                 mem[bpOffset + a] = 0;
             break;
 
-        case lessEqualCode: // 17
+        case lessEqualCode:                                  // 17
             //  Same as 9, but do cell b <= cell c.
             if (mem[bpOffset + a] <= mem[bpOffset + c]) {
                 mem[bpOffset + a] = 1;
@@ -335,25 +335,25 @@ public class Project1
                 mem[bpOffset + a] = 0;
             break;
 
-        case andCode: // 18
+        case andCode:                                             // 18
             //  Same as 9, but do cell b && cell c.
-            if (mem[bpOffset + b] > 0 && mem[bpOffset + c] > 0) {
+            if (mem[bpOffset + b] != 0 && mem[bpOffset + c] != 0) {
                 mem[bpOffset + a] = 1;
             }
             else
                 mem[bpOffset + a] = 0;
             break;
 
-        case orCode: // 19
+        case orCode:                                                 // 19
             //  Same as 9, but do cell b || cell c.
-            if (mem[bpOffset + b] > 0 || mem[bpOffset + c] > 0) {
+            if (mem[bpOffset + b] != 0 || mem[bpOffset + c] != 0) {
                 mem[bpOffset + a] = 1;
             }
             else
                 mem[bpOffset + a] = 0;
             break;
 
-        case notCode: // 20
+        case notCode:                                               // 20
             //  If cell b == 0, put 1 in cell a, otherwise, put 0 in cell a.
             if (mem[bpOffset + b] == 0) {
                 mem[bpOffset + a] = 1;
@@ -362,47 +362,47 @@ public class Project1
                 mem[bpOffset + a] = 0;
             break;
 
-        case oppCode: // 21
+        case oppCode:                                               // 21
             //  Put the opposite of the contents of cell b in cell a.
             mem[bpOffset + a] = 0 - mem[bpOffset + b];
             break;
 
-        case litCode: // 22
+        case litCode:                                                   // 22
             //  Put n in cell a.
             mem[bpOffset + a] = b;
             break;
 
-        case copyCode: // 23
+        case copyCode:                                             // 23
             //  Copy the value in cell b into cell a.
             mem[bpOffset + a] = mem[bpOffset + b];
             break;
 
-        case getCode: // 24
+        case getCode:                                                 // 24
             /*
-                Get the value stored in the heap at the index obtained by adding the value of
-                cell b and the value of cell c and copy it into cell a.
+            Get the value stored in the heap at the index obtained by adding the value of
+            cell b and the value of cell c and copy it into cell a.
             */
             heapIndex = mem[bpOffset + b] + mem[bpOffset + c];
             mem[bpOffset + a] = mem[heapIndex];
             break;
 
-        case putCode: // 25
+        case putCode:                                                 // 25
             /*
-                Take the value from cell c and store it in the heap at the location with index
-                computed as the value in cell a plus the value in cell b.
+            Take the value from cell c and store it in the heap at the location with index
+            computed as the value in cell a plus the value in cell b.
             */
             heapIndex = mem[bpOffset + a] + mem[bpOffset + b];
             mem[heapIndex] = mem[bpOffset + c];
             break;
 
-        case haltCode: // 26
+        case haltCode:                                                // 26
             //  Halt execution.
             System.exit(0);
 
-        case inputCode: // 27
+        case inputCode:                                             // 27
             /*
-                Print a ? and a space in the console and wait for an integer value to be typed
-                by the user, and then store it in cell a.
+            Print a ? and a space in the console and wait for an integer value to be typed
+            by the user, and then store it in cell a.
             */
             //System.out.format("DEBUG: bpOffset: %d, a: %d, mem[bpOffset + a]: %d%n", bpOffset, a, mem[bpOffset + a]);
             //Scanner userIn = new Scanner(System.in);
@@ -417,20 +417,20 @@ public class Project1
             }
             break;
 
-        case outputCode: // 28
+        case outputCode:                                            // 28
             //  Display the value stored in call a in the console
             System.out.print(mem[bpOffset + a]);
             break;
 
-        case newlineCode: // 29
+        case newlineCode:                                           // 29
             //  Move the console cursor to the beginning of the next line
             System.out.print("\n");
             break;
 
-        case symbolCode: // 30
+        case symbolCode:                                            // 30
             /*
-                If the value stored in cell a is between 32 and 126, display the corresponding symbol
-                at the console cursor, otherwise do nothing.
+            If the value stored in cell a is between 32 and 126, display the corresponding symbol
+            at the console cursor, otherwise do nothing.
             */
             int val = mem[bpOffset + a];
             if (val >= 32 && val <= 126) {
@@ -440,21 +440,21 @@ public class Project1
                 System.out.format("30, entry: %d is not a valid ascii character.", val);
             break;
 
-        case newCode: // 31
+        case newCode:                                                  // 31
             /*
-                Let the value stored in cell b be denoted by m. Decrease hp by m and put the new value
-                of hp in cell a
+            Let the value stored in cell b be denoted by m. Decrease hp by m and put the new value
+            of hp in cell a
             */
             int m = mem[bpOffset + b];
             hp -= m;
             mem[bpOffset + a] = hp;
             break;
 
-        case allocGlobalCode: // 32
+        case allocGlobalCode:                                    // 32
             /*
-                This instruction must occur first in any program that uses it. It simply sets the initial
-                value of sp to n cells beyond the end of stored program memory, and sets gp to the end of
-                stored program memory.
+            This instruction must occur first in any program that uses it. It simply sets the initial
+            value of sp to n cells beyond the end of stored program memory, and sets gp to the end of
+            stored program memory.
             */
             if (ip == 2) {
                 gp = codeEnd+1;
@@ -468,12 +468,12 @@ public class Project1
             }
             break;
 
-        case toGlobalCode: // 33
+        case toGlobalCode:                                          // 33
             //  Copy the contents of cell a to the global memory area at index gp+n.
             mem[gp + a] = mem[bpOffset + b];
             break;
 
-        case fromGlobalCode: // 34
+        case fromGlobalCode:                                     // 34
             //  Copy the contents of the global memory cell at index gp+n into cell a.
             mem[bpOffset + a] = mem[gp + b];
             break;
