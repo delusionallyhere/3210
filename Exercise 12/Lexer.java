@@ -49,24 +49,24 @@ public class Lexer {
                       sym == 32) {// whitespace
                     state = 1;
                 }
-                else if(letter(sym)){
+                else if(letter(sym)) {
                   data += (char) sym;
                   state = 2;
                 }
-                else if(digit(sym)){
+                else if(digit(sym)) {
                   data += (char) sym;
                   state = 3;
                 }
-                else if(sym == '-'){
+                else if(sym == '-') {
                   data += (char) sym;
                   state = 4;
                 }
-                else if(sym == '(' || sym == ')'){
+                else if (sym == '(' || sym == ')') {
                   data += (char) sym;
                   state = 5;
                   done = true;
                 }
-                else if(sym == ';'){
+                else if(sym == ';') {
                   state = 6;
                 }
 
@@ -75,95 +75,94 @@ public class Lexer {
                   done = true;
                 }
             }
-            else if(state == 2){
-              if(letter(sym) || digit(sym)){
+            else if(state == 2) {
+              if (letter(sym) || digit(sym)) {
                   data += (char) sym;
                   state = 2;
               }
-              else{
+              else {
                 putBackSymbol(sym);
                 done = true;
               }
             }
 
-            else if (state == 3){
-              if(digit(sym)){
+            else if (state == 3) {
+              if (digit(sym)) {
                 data += (char) sym;
                 state = 3;
               }
-              else if(sym == '.'){
+              else if (sym == '.') {
                 data += (char) sym;
                 state = 7;
               }
-              else{
+              else {
                 putBackSymbol(sym);
                 done = true;
               }
             }
 
-            else if (state == 4){
-              if (digit(sym)){
+            else if (state == 4) {
+              if (digit(sym)) {
                 data += (char) sym;
                 state = 3;
               }
             }
 
-            else if (state == 6){
-              if (sym == 10){ // maybe sym == 13
+            else if (state == 6) {
+              if (sym == 10) { // maybe sym == 13
                 state = 1;
                 data = "";
               }
-              else{
+              else {
                 state = 6;
               }
             }
-            else if (state == 7){
-              if(digit(sym)){
+            else if (state == 7) {
+              if(digit(sym)) {
                 data += (char) sym;
                 state = 7;
               }
-              else{
+              else {
                 putBackSymbol(sym);
                 done = true;
               }
             }
 
-          }while(!done);
+          } while(!done);
 
           Token token; //generates token depending on stopping state
 
-          if(state == 2){
-            if(data.equals("define") || data.equals("plus") || data.equals("minus") ||
+          if (state == 2){
+            if (data.equals("define") || /*data.equals("plus") || data.equals("minus") ||
                 data.equals("times") || data.equals("div") || data.equals("lt")  ||
                 data.equals("le") || data.equals("eq") || data.equals("ne") ||
                 data.equals("and") || data.equals("or") || data.equals("not") ||
                 data.equals("ins") || data.equals("first") || data.equals("rest") ||
                 data.equals("null") || data.equals("num") || data.equals("list") ||
                 data.equals("read") || data.equals("write") || data.equals("nl") ||
-                data.equals("quote") || data.equals("quit")
-              ){
+                data.equals("quote") || data.equals("quit")*/) {
                 return new Token(data, "");
               }
-            else{
+            else {
               return new Token("name", data);
             }
           }
-          else if (state == 3 || state == 7){
+          else if (state == 3 || state == 7) {
             return new Token("num", data);
           }
 
-          else if (state == 5){
-            if(data.equals('(')){
+          else if (state == 5) {
+            if (data.equals('(')) {
               return new Token ("lparen" , data);
             }
-            else{
+            else {
               return new Token ("rparen", data);
             }
           }
-          else if (state == 8){
+          else if (state == 8) {
             return new Token("eof", data);
           }
-          else{
+          else {
             error("somehow Lexer FA halted in a bad state " + state);
             return null;
           }
@@ -178,7 +177,7 @@ public Token getNextToken() {
      return token;
    }
 
-public void putBackToken(Token token){
+public void putBackToken(Token token) {
      System.out.println(margin + "put back token " + token.toString());
      stack.push(token);
 }
@@ -200,7 +199,7 @@ private int getNextSymbol() {
 }
 
 private void putBackSymbol(int sym) {
-     if(lookahead == 0) {// sensible to put one back
+     if (lookahead == 0) {// sensible to put one back
        lookahead = sym;
      }
      else {
@@ -222,7 +221,7 @@ private void putBackSymbol(int sym) {
     return '0' <= code && code <= '9';
   }
 
-  private boolean printable( int code ) {
+  private boolean printable(int code) {
      return ' ' <= code && code <= '~';
   }
 
@@ -243,6 +242,6 @@ public static void main(String[] args) throws Exception {
     do{
         token = lex.getNext();
         System.out.println(token.toString());
-    }while(!token.getKind().equals( "eof" ));
+    } while(!token.getKind().equals( "eof" ));
 
 }

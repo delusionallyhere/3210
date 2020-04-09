@@ -5,30 +5,30 @@ public class Parser {
 
   private Lexer lex;
 
-  public Parser(Lexer lexer){
+  public Parser(Lexer lexer) {
     lex = lexer;
   }
 
-  public Node parseDefs(){
+  public Node parseDefs() {
       System.out.println("-----> parsing <Defs>:");
       Node first = parseDef();
 
       // look ahead to see if there are more funcDef's
       Token token = lex.getNextToken();
 
-      if ( token.isKind("eof") ) {
-         return new Node( "Defs", first, null, null );
+      if (token.isKind("eof")) {
+         return new Node("Defs", first, null, null);
       }
       else {
-         lex.putBackToken( token );
+         lex.putBackToken(token);
          Node second = parseDefs();
-         return new Node( "Defs", first, second, null );
+         return new Node("Defs", first, second, null);
       }
 
   }
 
-  public Node parseDef(){
-    System.out.println("-----> parsing <funcDef>:");
+  public Node parseDef() {
+    System.out.println("-----> parsing <def>:");
 
     Token token = lex.getNextToken();
     errorCheck(token, "lparen");
@@ -44,11 +44,11 @@ public class Parser {
 
     token = lex.getNextToken();
 
-    if(token.isKind("rparen")){
-      Node second = parseExpr();
+    if (token.isKind("rparen")) {
+      Node first = parseExpr();
       token = lex.getNextToken();
       errorCheck(token, "rparen");
-      return new Node("def", name.getDetails(), null, second, null);
+      return new Node("def", name.getDetails(), first, null, null);
     }
     else{
       lex.putBackToken(token);
@@ -62,43 +62,103 @@ public class Parser {
     }
   }
 
-  public Node parseParams(){
+  public Node parseParams() {
     System.out.println("-----> parsing <params>:")
     Token token = lex.getNextToken();
+    errorCheck(token, "name");
+
+    Node first = new Node("name", token.getDetails(), null, null, null);
+
+    token = lex.getNextToken();
+    if (token.isKind("rparen")) {
+        lex.putBackToken(token);
+        return new Node("params", first, null, null);
+    }
+    else if (token.isKind("name")) {
+        Node second = parseParams();
+        return new Node("params", first, second, null)
+    }
+    else {
+        System.out.println("Error, expected 'name' or ')'' and saw " + token);
+        System.exit(1);
+        return null;
+    }
   }
 
-  public Node parseExpr(){
+  public Node parseExpr() {
     System.out.println("-----> parsing <expr>:")
     Token token = lex.getNextToken();
 
+    if (token.isKind("number")) {
+        return new Node("number", token.getDetails(), null, null, null);
+    }
+    else if (token.isKind("name")) {
+        return new Node("name", token.getDetails(), null, null, null);
+    }
+    else if (token.isKind("lparen")) {
+        lex.putBackToken(token);
+        Node first = parseList();
+        return first;
+    }
+    else if (token.isKind("rparen")) {
+        return null;
+    }
+    else {
+        System.out.println("Error, expected 'name' or ')'' and saw " + token);
+        System.exit(1);
+        return null;
+    }
   }
 
-  public Node parseList(){
+  public Node parseList() {
     System.out.println("-----> parsing <list>:")
     Token token = lex.getNextToken();
+    errorCheck(token, "lparen");
+    token = lex.getNextToken();
+
+    if (token.isKind("rparen")) {
+        return new Node("list", token.getDetails(), null, null, null);
+    }
+    else {
+        lex.putBackToken(token);
+        Node first = parseItems();
+        return first;
+    }
   }
 
-  public Node parseItems(){
+  public Node parseItems() {
     System.out.println("-----> parsing <items>:")
     Token token = lex.getNextToken();
 
+    Node first = parseExpr();
+    token = lex.getNextToken();
+
+    if (token.isKind("lparen") || token.isKind("num") || token.isKind("name")) {
+        lex.putBackToken(token);
+        Node second = parseItems();
+        return new Node("items", first, second, null);
+    }
+    else {
+        //lex.putBackToken(token);
+        return first;
+    }
   }
 
-  private void errorCheck( Token token, String kind ) {
-    if( ! token.isKind( kind ) ) {
+  private void errorCheck(Token token, String kind) {
+    if (!token.isKind(kind)) {
       System.out.println("Error:  expected " + token +
-                         " to be of kind " + kind );
+                                        " to be of kind " + kind);
       System.exit(1);
     }
   }
 
     // check whether token is correct kind and details
-  private void errorCheck( Token token, String kind, String details ) {
-    if( ! token.isKind( kind ) ||
-        ! token.getDetails().equals( details ) ) {
+  private void errorCheck(Token token, String kind, String details) {
+    if (!token.isKind(kind) ||
+        !token.getDetails().equals(details)) {
       System.out.println("Error:  expected " + token +
                           " to be kind= " + kind +
-                          " and details= " + details );
+                          " and details= " + details);
       System.exit(1);
     }
   }
