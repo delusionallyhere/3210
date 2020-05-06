@@ -1,0 +1,16 @@
+main()
+
+def main()
+   a = array(5)
+
+   a[function()] = function() + 3
+   print( a[0] ) nl()
+   print( a[1] ) nl()
+   print( a[2] ) nl()
+   print( a[3] ) nl()
+   print( a[4] ) nl()
+end
+
+def function()
+   return 2
+end

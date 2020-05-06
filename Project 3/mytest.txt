@@ -1,0 +1,6 @@
+main()
+
+def main()
+   "Shultz is cool"
+   return 0
+end

@@ -1,0 +1,39 @@
+; PROJECT 5
+
+(define (buildbst listOfNumbers)
+  (if (null? listOfNumbers)
+    '()
+    (addToBST listOfNumbers '() )
+  )
+)
+
+(define (addToBST nums tree)
+  (if (null? nums)
+    tree
+    (addToBST (getChildren nums) (parseTree tree (getRoot nums) ) ) ; recursive tree
+  )
+)
+
+(define (parseTree tree val)
+  (cond
+    ( (null? tree) (list val '() '()) ) ; empty node
+    ( (< val (getRoot tree)) (list (getRoot tree) (parseTree(getLeft tree)val) (getRight tree) ) ) ;recursive left
+    ( (> val (getRoot tree)) (list (getRoot tree) (getLeft tree) (parseTree(getRight tree)val) ) ) ;recursive right
+  )
+)
+
+(define (getRoot bst)
+  (first bst) ; root node
+)
+
+(define (getLeft bst) 
+  (first (rest bst) ) ; left node
+)
+
+(define (getRight bst)
+  (first (rest (rest bst) ) ) ; right node
+)
+
+(define (getChildren bst)
+  (rest bst) ; children node
+)

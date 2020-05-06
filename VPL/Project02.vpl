@@ -1,0 +1,105 @@
+4 2         Allocating space for both input values
+27 0        Store first value in cell 0
+27 1        Store second value in cell 1
+
+3 0         Call to place the cell value in 0 on the stack
+3 1         Call to place the cell value in 1 on the stack
+
+2 1001      Create a label, beginning of our subprogram
+6 0         Return the computed solution
+28 0    
+29          Create newline
+
+1 1001      Start of the subroutine 1001
+
+4 15        Initialize space for our values
+0           Cell 0: (N) user input
+0           Cell 1: (K) user input
+0           Cell 2: (Pointer to array[0][0])
+22 3 0      Cell 3: 0 
+22 4 1      Cell 4: 1 
+22 5 0      Cell 5: k 
+0           Cell 6: [n-1] and [i-1]
+0           Cell 7: (j-1)
+9 8 0 3     Cell 8: (N+1)
+22 9 0      Cell 9: (counter) (nested for loop)
+0           Cell 10: (x*N + cell2) get correct row
+22 11 0     Cell 11: First boolean value
+22 12 0     Cell 12: Second boolean value
+0           Cell 13: Random
+0           Cell 14: Random
+0           Cell 15: i for first loop
+0           Cell 16: j for loopception
+0           Cell 17: Another boolean
+0           Cell 18: Another boolean
+0           Cell 19: Another boolean
+0           Cell 20: (i * n)  
+0           Cell 21: (i * n) + j
+0           Cell 22: [n-1][k-1]
+0           Cell 23: [n-1][k]
+0           Cell 24: [n-1][k-1] + [n-1][k]
+0           Cell 25: Value of the index of the last row of the array
+
+
+1 101       beginning of loopdeloop
+16 6 9 8    Check if cell 4 < cell 8 (counter < N+1)
+20 11 11    Reverting the value in 11
+8 201 11    Jump to end of loop if counter < (N+1)
+
+31 2 8      New array (N+1)
+9 9 9 4     Increment coutner by 1
+
+7 101       Return to the top of the loop
+1 201       end of the loop
+
+22 15 0     Cell 15, Initialize 0 for int i
+1 102       Label for first loop
+17 11 15 0  Check if cell 0 is less than N (user input)
+20 11 11    Not, so when true drops into loop
+8 103 11    Check if contents in cell 11 (i < 10)
+
+22 16 0     Cell 16, initialize 0 for int j
+1 104       Label for loop-ception
+17 12 16 1  Check if cell 1 is less than K (user input)
+20 12 12    Not, so when true drops into loop
+8 105 12    Check if contents in cell 11 (j<k)
+
+14 17 16 3  Check if j = n
+14 18 16 15 Check if j = i
+19 19 17 18 Check if either or 
+20 19 19    Not, so when true drops into the loop
+8 106 19    Conditional jump to our if
+11 20 15 0  Cell 20 holds i * n 
+9 21 20 16  Cell 21 holds (i * n) + j
+25 2 21 4   Build the edges of our triangle (cell 4 holds val 1)
+7 107
+1 106       End of our if
+
+11 20 15 0  Cell 20 holds i * n
+9 21 20 16  Cell 21 holds (i * n) + j
+
+10 6 15 4 Compute i-1, puts us on the correct row-ish
+11 6 6 8  Gets us on the correct row, get value in index (1)
+10 7 16 4 Gets us the value of j-1, compute index (2)
+9 22 6 7  Add the indecies to get the index
+24 22 2 22 Gets the value at [n-1][k-1]
+9 23 6 5   Get the value at [n-1][k]
+24 23 23 2 Point to the array in memory
+9 24 23 22 Add the two values
+11 20 15 0  Cell 20 holds i * n 
+9 21 20 16  Cell 21 holds (i * n) + j
+25 21 2 24  
+1 107       End of the else babbbbyyy
+
+9 16 16 4   Increment our second loop
+7 104       If false will jump over
+1 105       
+
+9 15 15 4   Increment our i in first loop
+7 102       If false will jump over
+1 103
+
+11 25 0 8   Multiply N * (N+1)
+9 25 25 1   Multiply by K
+24 26 25 2  Get value
+5 26        Return the answer

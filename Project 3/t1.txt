@@ -1,0 +1,10 @@
+main()
+
+def main()
+    a = array(4)
+    b = array(5)
+    c = array(6)
+    a[2] = 7
+    print(a[2])
+    nl()
+end

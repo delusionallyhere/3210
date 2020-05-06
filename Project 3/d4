@@ -1,0 +1,14 @@
+main()
+
+def main()
+   a = array(5)
+
+   a[function()] = function() + 3
+
+   print( a[2] ) nl()
+
+end
+
+def function()
+   return 2
+end

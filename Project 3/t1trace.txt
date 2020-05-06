@@ -1,0 +1,42 @@
+Enter name of Corgi program file: t1.txt
+-----> parsing <program>:
+-----> parsing <funcCall>:
+                     got token: [var,print]     // Token 1 [variable of name of function]
+                     got token: [single,(]      // Token 2 (
+                     got token: [var,sqrt]      // vairable of 2nd function call
+put back token [var,sqrt]
+-----> parsing <args>:
+-----> parsing <expr>
+-----> parsing <term>
+-----> parsing <factor>
+                     got token: [var,sqrt]
+                     got token: [single,(]
+put back token [single,(]
+put back token [var,sqrt]
+-----> parsing <funcCall>:
+                     got token: [var,sqrt]
+                     got token: [single,(]
+                     got token: [num,3]
+put back token [num,3]
+-----> parsing <args>:
+-----> parsing <expr>
+-----> parsing <term>
+-----> parsing <factor>
+                     got token: [num,3]
+#0[num,3]<- ->
+                     got token: [single,)]
+put back token [single,)]
+                     got token: [single,)]
+put back token [single,)]
+                     got token: [single,)]
+#1[args,]<0 ->
+#2[funcCall,sqrt]<1 ->
+                     got token: [single,)]
+put back token [single,)]
+                     got token: [single,)]
+put back token [single,)]
+                     got token: [single,)]
+#3[args,]<2 ->
+#4[funcCall,print]<3 ->
+                     got token: [eof,]
+#5[program,]<4 ->
